@@ -52,14 +52,18 @@
 
 ## cheatsheet
 #### reset commit
-> ```git reflog```
-> ```git reset --hard <commit-hash>```
+> ```
+> git reflog
+> git reset --hard <commit-hash>
+> ```
 #### before commit
-> ```git add *```
-> ```git status```
-> ```pre-commit run```
-> ```git add *```
-> ```git commit ....```
+> ```
+> git add *
+> git status
+> pre-commit run
+> git add *
+> git commit ....
+> ```
 
 ## other help resources:
 https://github.com/markojaadam/cython-lwan-fibo
