@@ -7,7 +7,7 @@
   ...
   "dependencies": {
     ...
-    "rapidjson": "git@github.com:Tencent/rapidjson.git"
+    "rapidjson_wrapper": "git@github.com:Tencent/rapidjson_wrapper.git"
   },
   ...
   "gypfile": true
@@ -23,7 +23,7 @@
     {
       ...
       'include_dirs': [
-        '<!(node -e \'require("rapidjson")\')'
+        '<!(node -e \'require("rapidjson_wrapper")\')'
       ]
     }
   ]
