@@ -11,9 +11,11 @@ rj.test(json_example)
 rj.test(json_example2)
 rj.test(json_example3)
 
-d = rj.Document(json_example)
+d = rj.Document()
+d.Parse(json_example)
 print(d.HasError())
 
-d = rj.Document(json_example2)
+d = rj.Document()
+d.Parse(json_example2)
 print(d.HasError())
 print(d.GetError())

@@ -14,10 +14,14 @@ class Doc{
         Document document;
 
     public:
-        Doc(){}
+        Doc(){document = Document();}
         Doc(char* json){
             document = Document();
-            document.Parse(json);
+            Parse(json);
+        }
+        void Parse(char* json)
+        {
+            this->document.Parse(json);
         }
 
         bool HasError()

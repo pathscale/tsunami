@@ -7,14 +7,34 @@ ext_modules = [
         "core.wrappers.rapidjson_wrapper.rapidjson",
         sources=[
             "core/wrappers/rapidjson_wrapper/rjson_wrapper.pyx",
-            # "core/third-party/rapidjson_wrapper/include/rapidjson_wrapper/schema.h",
         ],
         include_dirs=["core/wrappers/rapidjson_wrapper/test"],
         language="c++",
-    )
+    ),
+    Extension(
+        "core.wrappers.utils.utils",
+        sources=[
+            "core/wrappers/utils/utils.pyx",
+        ],
+        include_dirs=["core/wrappers/utils"],
+        language="c++",
+    ),
+]
+ext_tests = [
+    Extension(
+        "core.cy_tests.tests",
+        sources=[
+            "core/cy_tests/rjson_wrapper_test.pyx",
+        ],
+        include_dirs=[
+            "core/wrappers/rapidjson_wrapper/test",
+            "core/wrappers/utils"
+        ],
+        language="c++",
+    ),
 ]
 setup(
-    ext_modules=cythonize(ext_modules),
+    ext_modules=cythonize(list(ext_modules+ext_tests)),
     zip_safe=False,
     name="tsunami",
     version="0.1",
