@@ -1,6 +1,6 @@
 #cython: boundscheck=False, wraparound=False, nonecheck=False
 from libcpp.string cimport string
-from libc.stdlib cimport malloc, free
+from libc.stdlib cimport malloc, free, abort
 from libcpp cimport bool
 from cython.parallel import parallel, prange
 import time
@@ -69,8 +69,35 @@ def run_simple_test():
 
 
 
+# def run_parallel_test_looseing_values(int n_cycles=1000, int n_workers = 4):
+#     cdef:
+#         int worker_run = int(n_cycles / n_workers)
+#     start_time = time.time()
+#
+#     cdef:
+#         int i
+#
+#     with nogil, parallel(num_threads=n_workers):
+#         for i in range(worker_run):
+#             simple_test_Doc()
+#
+#         local_buf = <int *> malloc(sizeof(int) * n_cycles)
+#         if local_buf is NULL:
+#             abort()
+#
+#         # share the work using the thread-local buffer(s)
+#         for i in prange(worker_run, schedule='guided'):
+#             simple_test_Doc()
+#
+#         free(local_buf)
+#
+#     elapsed = time.time() - start_time
+#
+#     return elapsed
+
+
 ########## nogil test #############
-cdef void parse_omp_worker(int cycles) nogil:
+cdef inline void parse_omp_worker(int cycles) nogil:
     cdef:
         int i
 
