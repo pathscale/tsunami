@@ -1,6 +1,8 @@
 import pytest
 
 from core import rapidjson as rj
+#from core import tests
+from core.cy_tests import tests as tests
 
 
 def test_documentClassTestNoError():
@@ -27,3 +29,8 @@ def test_documentClassTestError2():
     print("hard parse: ", rj._text(d.GetErrorBytes()))
     if d.GetError() != "Error(offset 1): Invalid value.":
         assert False, d.GetError()
+
+def test_nogil_test():
+    errors, text = tests.run_simple_test()
+    text = text
+    assert not errors, text

@@ -1,7 +1,8 @@
 from libcpp.string cimport string
 from libc.stdlib cimport malloc, free
+from libcpp cimport bool
 
-from ..wrappers.rapidjson_wrapper cimport rjson_wrapper as rjw
+#from ..wrappers.rapidjson_wrapper cimport rjson_wrapper as rjw
 from ..wrappers.rapidjson_wrapper.test cimport test as t
 from ..wrappers.utils cimport utils
 
@@ -42,9 +43,20 @@ cdef string TEST_RAW = b"""{
 
 cdef const char *TEST_DATA = TEST_RAW.c_str()
 
-cdef void simple_test_Doc() nogil:
+cdef bool simple_test_Doc() nogil:
     cdef:
         t.Doc *d
         char* data = utils.constCharToChar(TEST_DATA)
     d = new t.Doc()
     d.Parse(data)
+
+    #cdef char * error = utils.btoc(d.HasError())
+    #utils.cprint(error)
+    return d.HasError()
+
+def run_simple_test():
+    cdef:
+        bool result
+    with nogil:
+        result = simple_test_Doc()
+    return result, "nogil test"
