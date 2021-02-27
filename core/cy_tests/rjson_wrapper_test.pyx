@@ -1,6 +1,10 @@
 from libcpp.string cimport string
 from libc.stdlib cimport malloc, free
 from libcpp cimport bool
+from cython.parallel import parallel, prange
+import time
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 #from ..wrappers.rapidjson_wrapper cimport rjson_wrapper as rjw
 from ..wrappers.rapidjson_wrapper.test cimport test as t
@@ -60,3 +64,74 @@ def run_simple_test():
     with nogil:
         result = simple_test_Doc()
     return result, "nogil test"
+
+cdef void parse_omp_worker(int cycles) nogil:
+    cdef:
+        int i
+
+    for i in range(cycles):
+        simple_test_Doc()
+
+def run_worker_test(int n_cycles=1000, int n_workers = 4):
+    cdef:
+        int worker_run = int(n_cycles / n_workers)
+    start_time = time.time()
+    with nogil, parallel(num_threads=n_workers):
+        parse_omp_worker(worker_run)
+    elapsed = time.time() - start_time
+
+    return elapsed
+
+def run_iteration_test(int n_cycles=1000, int iteration = 4):
+    cdef:
+        int worker_run = int(n_cycles / iteration)
+        int i
+
+    start_time = time.time()
+    for i in range(iteration):
+        parse_omp_worker(worker_run)
+    elapsed = time.time() - start_time
+
+    return elapsed
+
+
+def run_threads_test(int n_cycles=1000, int n_workers = 4):
+    cdef:
+        int worker_run = int(n_cycles / n_workers)
+    start_time = time.time()
+    threads = []
+    for i in range(n_workers):
+        t = threading.Thread(target=parse_omp_worker, args=[worker_run], daemon=True)
+        threads.append(t)
+
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    elapsed = time.time() - start_time
+    return elapsed
+
+
+def test_construct_tpe(int n_cycles=1000, int n_workers=4):
+    cdef:
+        int worker_run = int(n_cycles / n_workers)
+    start_time = time.time()
+    with ThreadPoolExecutor(max_workers=n_workers) as executor:
+        futures = []
+        for i in range(n_workers):
+            futures.append( executor.submit(parse_omp_worker, worker_run) )
+        as_completed(futures)
+    elapsed = time.time() - start_time
+    return elapsed
+
+def test_prange_test(int n_cycles=1000, int n_workers = 4):
+    cdef:
+        int worker_run = int(n_cycles / n_workers)
+        int i
+
+    start_time = time.time()
+    for i in prange(n_workers, nogil=True):
+        parse_omp_worker(worker_run)
+    elapsed = time.time() - start_time
+    return elapsed
