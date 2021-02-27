@@ -1,4 +1,4 @@
-cimport document
+cimport cdocument as cdoc
 
 cdef str ctopy(text):
     return text.decode('UTF-8')
@@ -10,24 +10,35 @@ cdef const char* pytoc(text):
     return _text
 
 cdef class Document:
-    cdef document.Doc doc
+    cdef cdoc.Doc doc
     def __init__(self, json):
-        self.doc = document.Doc(pytoc(json))
+        self.doc = cdoc.Doc(pytoc(json))
 
-    cpdef change_json(self, val=None, amount=None, dictionary=None, valList=None, amountList=None, tupleList=None):
-        if not val is None and not amount is None:
-            self.doc.change(pytoc(val), amount)
-        elif not dictionary is None:
-            for item in dictionary:
-                self.doc.change(pytoc(item), dictionary[item])
-        elif not valList is None and not amountList is None:
-            for i in range(len(valList)):
-                self.doc.change(pytoc(valList[i]), amountList[i])
-        elif not tupleList is None:
-            for i in tupleList:
-                self.doc.change(pytoc(i[0]), i[1])
+    cpdef set_int(self, key, value):
+        if not key is None and not value is None:
+            self.doc.set_int(pytoc(key), value)
         else:
             raise TypeError
 
+    cpdef set_string(self, key, value):
+        if not key is None and not value is None:
+            key = pytoc(key)
+            value = pytoc(value)
+            self.doc.set_string(key, value)
+        else:
+            raise TypeError
+
+    # cpdef add_int(self, key, value):
+    #     if not key is None and not value is None:
+    #         self.doc.add_int(pytoc(key), value)
+    #     else:
+    #         raise TypeError
+
+    cpdef get_int(self, val):
+        return self.doc.get_int(pytoc(val))
+
+    cpdef get_string(self, val):
+        return ctopy(self.doc.get_string(pytoc(val)))
+
     cpdef get_json(self):
-        return ctopy(self.doc.get())
+        return ctopy(self.doc.get_json())

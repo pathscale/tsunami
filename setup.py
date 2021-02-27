@@ -15,7 +15,13 @@ ext_modules = [
         sources=["wrappers/rapidjson/document.pyx"],
         include_dirs=["wrappers/rapidjson"],
         language="c++",
-    )
+    ),
+    Extension(
+        "tests",
+        sources=["tests.pyx"],
+        include_dirs=["wrappers/rapidjson"],
+        language="c++",
+    ),
 ]
 setup(
     ext_modules=cythonize(ext_modules),

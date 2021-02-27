@@ -5,19 +5,18 @@ json2 = '{"project":"rapidjson","moons":2}'
 
 d1 = doc.Document(json1)
 d2 = doc.Document(json2)
-d1.change_json("stars", 5)
-d2.change_json("moons", 8)
+d1.set_int("stars", 5)
+d2.set_int("moons", 8)
 print(d1.get_json())
 print(d2.get_json())
 
-d1.change_json("stars", 8)
+d1.set_int("stars", 8)
 print(d1.get_json())
-
-d1.change_json(dictionary={"stars": 4, "moons": 3, "suns": 81})
-print(d1.get_json())
-
-d1.change_json(valList=["stars", "planets", "moons"], amountList=[5, 2, 30])
-print(d1.get_json())
-
-d1.change_json(tupleList=(["stars", 8], ["moons", 100], ["suns", 0]))
+print(d1.get_string("project"))
+d1.set_string("project", "tsunami")
+print(d1.get_string("project"))
+d1.set_string("stars", "five")
+print(d1.get_string("stars"))
+# d1.add_int("dog", 5)
+# print(d1.get_int("dog"))
 print(d1.get_json())
