@@ -15,8 +15,8 @@ def run_function_for_thread_test(function, name, n_cycles = 1000, n_workers_max=
 
 def threads_test():
     n_cycles = 10000
-    max_workers = 24
-    text =f"#bench test\nup to {max_workers} workers and {n_cycles} cycles each"
+    max_workers = 8
+    text =f"# bench test\nup to {max_workers} workers and {n_cycles} cycles each"
     text+=run_function_for_thread_test(function=tests.run_worker_test, name="parallel cython", n_cycles=n_cycles, n_workers_max=max_workers)
     text+=run_function_for_thread_test(function=tests.run_iteration_test, name="iterations range()", n_cycles=n_cycles, n_workers_max=max_workers)
     text+=run_function_for_thread_test(function=tests.run_threads_test, name="pythreads", n_cycles=n_cycles, n_workers_max=max_workers)

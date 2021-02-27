@@ -72,6 +72,16 @@ cdef void parse_omp_worker(int cycles) nogil:
     for i in range(cycles):
         simple_test_Doc()
 
+def parse_py_worker(int cycles):
+    with nogil:
+        for i in range(cycles):
+            simple_test_Doc()
+
+def construct_py_worker(int cycles):
+    with nogil:
+        for i in range(cycles):
+            simple_test_Doc()
+
 def run_worker_test(int n_cycles=1000, int n_workers = 4):
     cdef:
         int worker_run = int(n_cycles / n_workers)
@@ -101,7 +111,7 @@ def run_threads_test(int n_cycles=1000, int n_workers = 4):
     start_time = time.time()
     threads = []
     for i in range(n_workers):
-        t = threading.Thread(target=parse_omp_worker, args=[worker_run], daemon=True)
+        t = threading.Thread(target=parse_py_worker, args=[worker_run], daemon=True)
         threads.append(t)
 
     for t in threads:
@@ -120,7 +130,7 @@ def test_construct_tpe(int n_cycles=1000, int n_workers=4):
     with ThreadPoolExecutor(max_workers=n_workers) as executor:
         futures = []
         for i in range(n_workers):
-            futures.append( executor.submit(parse_omp_worker, worker_run) )
+            futures.append( executor.submit(parse_py_worker, worker_run) )
         as_completed(futures)
     elapsed = time.time() - start_time
     return elapsed
