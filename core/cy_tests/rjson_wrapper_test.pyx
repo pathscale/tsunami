@@ -53,10 +53,10 @@ cdef bool simple_test_Doc() nogil:
         char* data = utils.constCharToChar(TEST_DATA)
     d = new t.Doc()
     d.Parse(data)
-
-    #cdef char * error = utils.btoc(d.HasError())
-    #utils.cprint(error)
-    return d.HasError()
+    cdef:
+        bool result = d.HasError()
+    del d
+    return result
 
 def run_simple_test():
     cdef:
