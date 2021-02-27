@@ -1,3 +1,4 @@
+#cython: boundscheck=False, wraparound=False, nonecheck=False
 from libcpp.string cimport string
 from libc.stdlib cimport malloc, free
 from libcpp cimport bool
@@ -65,6 +66,10 @@ def run_simple_test():
         result = simple_test_Doc()
     return result, "nogil test"
 
+
+
+
+########## nogil test #############
 cdef void parse_omp_worker(int cycles) nogil:
     cdef:
         int i

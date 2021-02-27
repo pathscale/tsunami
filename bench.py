@@ -2,6 +2,8 @@ import pytest
 
 from core import rapidjson as rj
 from core import tests as tests
+import psutil
+
 
 def bench_print_result(elapsed, n_workers, n_cycles):
     return ("\n\nNumber of workers: %s\t Elapsed: %.2f sec\t%.0d ns/op" % (n_workers, elapsed, (elapsed / n_cycles * 10 ** 9)))
@@ -15,8 +17,8 @@ def run_function_for_thread_test(function, name, n_cycles = 1000, n_workers_max=
 
 def threads_test():
     n_cycles = 10000
-    max_workers = 8
-    text =f"# bench test\nup to {max_workers} workers and {n_cycles} cycles each"
+    max_workers = psutil.cpu_count(logical=False)+1
+    text =f"# bench test\nup to {max_workers-1} workers and {n_cycles} cycles each"
     text+=run_function_for_thread_test(function=tests.run_worker_test, name="parallel cython", n_cycles=n_cycles, n_workers_max=max_workers)
     text+=run_function_for_thread_test(function=tests.run_iteration_test, name="iterations range()", n_cycles=n_cycles, n_workers_max=max_workers)
     text+=run_function_for_thread_test(function=tests.run_threads_test, name="pythreads", n_cycles=n_cycles, n_workers_max=max_workers)
